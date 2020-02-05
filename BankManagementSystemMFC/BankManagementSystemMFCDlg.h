@@ -1,6 +1,7 @@
+#include "Database.h"
 
 // BankManagementSystemMFCDlg.h : header file
-//
+
 
 #pragma once
 
@@ -34,4 +35,18 @@ protected:
 public:
 
 	afx_msg void OnBnClickedButtonRegister();
+	afx_msg void OnBnClickedButtonLogin();
+
+	// Email input for login
+	CString strEmailLogin;
+	// Password for the login
+	CString strPasswordLogin;
+	//Database
+	Database database;
+
+	// Check box to show/hide password
+	CButton ctrCheckBox;
+	// Control the state of the password edit box (show/hide)
+	CEdit ctrPass;
+	afx_msg void OnBnClickedCheckPass();
 };

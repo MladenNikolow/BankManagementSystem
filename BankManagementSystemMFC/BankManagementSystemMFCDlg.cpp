@@ -7,7 +7,9 @@
 #include "BankManagementSystemMFC.h"
 #include "BankManagementSystemMFCDlg.h"
 #include "afxdialogex.h"
-#include "Register.h"
+#include "RegisterDlg.h"
+#include "BankingDlg.h"
+#include "BankAccountNumberGenerator.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -53,13 +55,34 @@ END_MESSAGE_MAP()
 
 CBankManagementSystemMFCDlg::CBankManagementSystemMFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_BANKMANAGEMENTSYSTEMMFC_DIALOG, pParent)
+	, strEmailLogin(_T("Email"))
+	, strPasswordLogin(_T("Password"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
+	//If not exist table for the Login Accounts - create it
+	CString strCreateLoginTable = _T("");
+	strCreateLoginTable.Format(L"IF NOT EXISTS (select * from sysobjects where name='LoginAccounts')CREATE TABLE LoginAccounts(id int IDENTITY(1, 1) NOT NULL, first_name varchar(255) NOT NULL, second_name varchar(255) NOT NULL, last_name varchar(255) NOT NULL, age int NOT NULL, email varchar(255) NOT NULL, phone varchar(255) NOT NULL, city varchar(255) NOT NULL, street_address varchar(255) NOT NULL, pass varchar(255) NOT NULL, last_login DATETIME NOT NULL)");
+	database.Execute(strCreateLoginTable);
+
+	//If not exist table for the Bank Accounts - create it
+	CString strCreateBankAccTable = _T("");
+	strCreateBankAccTable.Format(L"IF NOT EXISTS (select * from sysobjects where name='BankAccounts') CREATE TABLE BankAccounts(id int IDENTITY(1, 1) NOT NULL,log_acc_id int NOT NULL, bank_acc_number varchar(11) NOT NULL, currency varchar(3) NOT NULL, balance numeric(18,2) NOT NULL, date_of_creation DATETIME NOT NULL)");
+	database.Execute(strCreateBankAccTable);
+
+	//If not exist table for the Transactions - create it
+	CString strCreateTransTable = _T("");
+	strCreateTransTable.Format(L"IF NOT EXISTS(select * from sysobjects where name ='Transactions') CREATE TABLE Transactions (id int IDENTITY(1, 1) NOT NULL, bank_acc_id int NOT NULL, amount numeric(18,2) NOT NULL, bank_number_sender varchar(11) NOT NULL, bank_number_recipient varchar(11) NOT NULL, transaction_time DATETIME NOT NULL)");
+	database.Execute(strCreateTransTable);
 }
 
 void CBankManagementSystemMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT_EMAIL, strEmailLogin);
+	DDX_Text(pDX, IDC_EDIT_PASSWORD, strPasswordLogin);
+	DDX_Control(pDX, IDC_CHECK_PASS, ctrCheckBox);
+	DDX_Control(pDX, IDC_EDIT_PASSWORD, ctrPass);
 }
 
 BEGIN_MESSAGE_MAP(CBankManagementSystemMFCDlg, CDialogEx)
@@ -68,6 +91,9 @@ BEGIN_MESSAGE_MAP(CBankManagementSystemMFCDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	
 	ON_BN_CLICKED(IDC_BUTTON_REGISTER, &CBankManagementSystemMFCDlg::OnBnClickedButtonRegister)
+
+	ON_BN_CLICKED(IDC_BUTTON_LOGIN, &CBankManagementSystemMFCDlg::OnBnClickedButtonLogin)
+	ON_BN_CLICKED(IDC_CHECK_PASS, &CBankManagementSystemMFCDlg::OnBnClickedCheckPass)
 END_MESSAGE_MAP()
 
 
@@ -162,5 +188,106 @@ void CBankManagementSystemMFCDlg::OnBnClickedButtonRegister()
 {
 	// TODO: Add your control notification handler code here
 	Register regDlg;
-	regDlg.DoModal();
+	regDlg.setDb(database);
+
+	INT_PTR result = regDlg.DoModal();
+
+	if (result == IDOK)
+	{
+		UpdateData(TRUE);
+
+		//Convert the age from string to int
+		int age = _wtoi(regDlg.strAge);
+		//Save Query
+		CString strSqlInsertQuery = _T("");
+		strSqlInsertQuery.Format(
+			 L" INSERT INTO LoginAccounts(first_name, second_name, last_name, age, email, phone, city, street_address, pass, last_login) VALUES ('%s', '%s', '%s', %i, '%s', '%s', '%s', '%s', '%s', GETDATE())", 
+			regDlg.strFirstName,
+			regDlg.strSecondName,
+			regDlg.strLastName,
+			age,
+			regDlg.strEmailReg,
+			regDlg.strPhone,
+			regDlg.strCity,
+			regDlg.strAddress,
+			regDlg.strPasswordReg
+		);
+		///Execute the query
+		database.Execute(strSqlInsertQuery);
+
+		//Get account id form Login table
+		CString selectQuery = _T("SELECT id FROM LoginAccounts");
+		CString whereStatement;
+		whereStatement.Format(L"email = '%s'", regDlg.strEmailReg);
+		CString fieldName = _T("id");
+		int log_acc_id = database.selectInt(selectQuery, fieldName, whereStatement);
+		//Generate a unique bank account number starting including the currency and 6 random numbers
+		CString bankAccNumber = regDlg.strCurrency; //add the currency
+		bankAccNumber += genRandomBankNumber(); //generate the numbers
+		//Save Query
+		strSqlInsertQuery.Format(
+			L"INSERT INTO BankAccounts(log_acc_id, bank_acc_number, currency, balance, date_of_creation) VALUES ('%i', '%s', '%s', '%d', GETDATE())",
+			log_acc_id,
+			bankAccNumber,
+			regDlg.strCurrency,
+			0.0
+		);
+		//Execute the query
+		database.Execute(strSqlInsertQuery);
+
+
+
+	}
+	
+}
+
+
+void CBankManagementSystemMFCDlg::OnBnClickedButtonLogin()
+{
+	// TODO: Add your control notification handler code here
+
+	Banking bankDlg;
+	UpdateData(TRUE);
+	
+	CString selectQuery = L"SELECT pass FROM LoginAccounts";
+	CString whereStatement;
+	whereStatement.Format(L"email = '%s'", strEmailLogin);
+	CString realPassword = database.selectString(selectQuery, L"pass", whereStatement);
+
+	if (realPassword == strPasswordLogin)
+	{ 
+		//Get the current account id
+		CString selectQuery = L"SELECT id FROM LoginAccounts";
+		CString whereStatement;
+		whereStatement.Format(L"email = '%s'", strEmailLogin);
+		int id = database.selectInt(selectQuery, L"id", whereStatement);
+
+		//set the email, id and the database for the BankDlg
+		bankDlg.setEmail(strEmailLogin);
+		bankDlg.setId(id);
+		bankDlg.setDb(database);
+		bankDlg.DoModal();
+	}
+	 else
+	{
+		AfxMessageBox(L"Wrong email or password!");
+	}
+
+
+}
+
+
+void CBankManagementSystemMFCDlg::OnBnClickedCheckPass()
+{
+	// TODO: Add your control notification handler code here
+	if (ctrCheckBox.GetCheck())
+	{
+		ctrPass.SetPasswordChar('*');
+		ctrPass.Invalidate();
+	}
+	else
+	{
+		ctrPass.SetPasswordChar(0);
+		ctrPass.Invalidate();
+	}
 }
