@@ -18,7 +18,7 @@ A simple bank management system, developed in C++, using Microsoft SQL Server 20
   - Create Bank Account in different currencies
   - Add money
   - Withdraw money
-  - Send money to another bank accounts
+  - Send money to another bank account
   - See the history of the transactions
   - Currency exchange
   
