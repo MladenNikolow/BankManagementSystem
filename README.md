@@ -24,6 +24,5 @@ Photos:
 <img align="left" src="Photos/Registration.PNG">
 <img align="left" src="Photos/Login.PNG">
 <img align="left" src="Photos/Banking.PNG">
-![Login dialog](Photos/Login.PNG)
-![Banking dialog](Photos/Banking.PNG)
+
 
