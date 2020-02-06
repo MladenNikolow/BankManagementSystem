@@ -1,9 +1,10 @@
 # BankManagementSystem
-C++ MFC
+<h1> C++ MFC </h1>
 
 A simple bank management system, developed in C++, using Microsoft SQL Server 2017 Express and MFC (Visual C++).
 
 Connecting to SQL Server:
+
   - Go to --> Database.cpp file
   - Change the Driver name --> on line 9 (or install ODBC Driver 17 for SQL Server)
   - Change the value of path variable to the Database file Directory--> on line 10
@@ -13,6 +14,7 @@ Connecting to SQL Server:
   - Change the value of user variable to password for the user . --> on line 14
 
 Functionalities of the program:
+
   - Create Bank Account in different currencies
   - Add money
   - Withdraw money
@@ -21,6 +23,7 @@ Functionalities of the program:
   - Currency exchange
   
 Photos:
+
 <img align="left" src="Photos/Registration.PNG">
 <img align="left" src="Photos/Login.PNG">
 <img align="left" src="Photos/Banking.PNG">
