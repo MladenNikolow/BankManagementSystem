@@ -21,4 +21,4 @@ Functionalities of the program:
   - Currency exchange
   
 Photos:
-<img src= "/Photos/Registration.png" width = 100>
+![Registration dialog](/Photos/Registration.png)
