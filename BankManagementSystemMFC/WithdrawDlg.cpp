@@ -4,6 +4,7 @@
 #include "pch.h"
 #include "BankManagementSystemMFC.h"
 #include "WithdrawDlg.h"
+#include "BankAccount.h"
 #include "afxdialogex.h"
 
 
@@ -75,22 +76,7 @@ BOOL WithdrawDlg::OnInitDialog()
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-BOOL WithdrawDlg::validation(const CString& strBankAcc)
-{
-	CString strSqlSelect;
-	strSqlSelect.Format(L"SELECT bank_acc_number FROM BankAccounts");
-	CString strField = L"bank_acc_number";
-	CString strWhereStatement;
-	strWhereStatement.Format(L"bank_acc_number = '%s'", strBankAcc);
 
-	if (database.selectString(strSqlSelect, strField, strWhereStatement) == "No Data")
-	{
-		AfxMessageBox(L"Enter a valid bank account!");
-		return FALSE;
-	}
-
-	return TRUE;
-}
 void WithdrawDlg::OnBnClickedButtonWithdraw()
 {
 	// TODO: Add your control notification handler code here
@@ -98,75 +84,19 @@ void WithdrawDlg::OnBnClickedButtonWithdraw()
 
 	comboBoxBankAcc.GetLBText(comboBoxBankAcc.GetCurSel(), strCurrentAccount);
 
+	BankAccount current(strCurrentAccount);
 
-	//Validate the bank account
-	if (validation(strCurrentAccount))
+	//Validate that the bank account exists in the database
+	//If not exists, throw a message
+	if (current.validate(strCurrentAccount))
 	{
-		//Get the current balance of the bank account
-		CString strSelectQuery;
-		strSelectQuery.Format(L"SELECT balance FROM BankAccounts");
-		CString fieldName = _T("balance");
-		CString whereStatement;
-		whereStatement.Format(
-			L"bank_acc_number = '%s'",
-			strCurrentAccount
-		);
-
-		double currentBalance = database.selectDouble(strSelectQuery, fieldName, whereStatement);
-
-		//Get the id of the bank account
-		CString SelectQuery;
-		SelectQuery.Format(L"SELECT id FROM BankAccounts");
-		CString field = _T("id");
-		CString strWhereStatement;
-		strWhereStatement.Format(
-			L"bank_acc_number = '%s'",
-			strCurrentAccount
-		);
-
-		int bankAccId = database.selectInt(SelectQuery, field, strWhereStatement);
-
-
-		//check if there is enough money
-		if (currentBalance < _wtof(strAmount))
+		//Change the balance of the bank account
+		//Generate the transaction
+		if (current.withdrawMoney(_wtof(strAmount)))
 		{
-			//there isn't enough money
-			int precision = 2;
-			CString error;
-			error.Format(L"Not enough money!\nThe current balance of the bank account is: %.*f", precision, currentBalance);
-			AfxMessageBox(error);
+			AfxMessageBox(L"Money withdrawal successful!");
 		}
-		else
-		{
-			//there is enough money to perform the operation
-			//Insert query for the transactions table
-			CString strInsertQuery;
-			strInsertQuery.Format(
-				L"INSERT INTO Transactions(bank_acc_id, amount, bank_number_sender, bank_number_recipient, transaction_time) VALUES ('%d', '%f', '%s', '%s', GETDATE())",
-				bankAccId,
-				_wtof(strAmount),
-				strCurrentAccount,
-				L"out"
-			);
-
-			//Insert query for the amount field in bank account table
-			CString strUpdateQuery;
-			strUpdateQuery.Format(
-				L"UPDATE BankAccounts SET balance = '%f' WHERE bank_acc_number = '%s'",
-				currentBalance - _wtof(strAmount),
-				strCurrentAccount
-			);
-
-			if (database.Execute(strInsertQuery) && database.Execute(strUpdateQuery))
-			{
-				AfxMessageBox(L"Money withdrawal successful!");
-			}
-			else
-			{
-				//do nothing
-				//Database::Execute() will throw a message automatically, if something go wrong
-			}
-		}
+		
 		CDialogEx::OnOK();
 	}
 }

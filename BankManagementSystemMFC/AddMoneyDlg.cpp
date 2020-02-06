@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "BankManagementSystemMFC.h"
 #include "AddMoneyDlg.h"
-#include"ValidateBankAccount.h"
+#include "BankAccount.h"
 #include "afxdialogex.h"
 
 
@@ -38,11 +38,36 @@ END_MESSAGE_MAP()
 
 
 // AddMoneyDlg message handlers
+void AddMoneyDlg::setLoginAccId()
+{
+	
+	//Get the current account id
+	CString selectQuery = L"SELECT id FROM LoginAccounts";
+	CString whereStatement;
+	whereStatement.Format(L"email = '%s'", strEmail);
 
+	nAccId = database.selectInt(selectQuery, L"id", whereStatement);
+	
+}
+
+void AddMoneyDlg::setAllBankAccounts()
+{
+	//Get all bank accounts of this user
+	CString selectQuery;
+	selectQuery.Format(L"SELECT bank_acc_number FROM BankAccounts");
+	CString whereStatement;
+	whereStatement.Format(L"log_acc_id = '%d'", nAccId);
+
+	CString fieldName = _T("bank_acc_number");
+	allAccounts = database.selectMultipleStrings(selectQuery, fieldName, whereStatement);
+}
 
 BOOL AddMoneyDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+	setLoginAccId();
+
+	setAllBankAccounts();
 
 	for (size_t i = 0; i < allAccounts.size(); ++i)
 	{
@@ -53,31 +78,25 @@ BOOL AddMoneyDlg::OnInitDialog()
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-BOOL AddMoneyDlg::validation(const CString& strBankAcc)
-{
-	CString strSqlSelect;
-	strSqlSelect.Format(L"SELECT bank_acc_number FROM BankAccounts");
-	CString strField = L"bank_acc_number";
-	CString strWhereStatement;
-	strWhereStatement.Format(L"bank_acc_number = '%s'", strBankAcc);
-
-	if (database.selectString(strSqlSelect, strField, strWhereStatement) == "No Data")
-	{
-		AfxMessageBox(L"Enter a valid bank account!");
-		return FALSE;
-	}
-
-	return TRUE;
-}
 void AddMoneyDlg::OnBnClickedButtonAddMoney()
 {
 	// TODO: Add your control notification handler code here
 	UpdateData(TRUE);
 	comboBoxAccountsList.GetLBText(comboBoxAccountsList.GetCurSel(), strCurrentAccount);
 
-	if (validation(strCurrentAccount))
+	BankAccount current (strCurrentAccount);
+
+	//Validate that the bank account exists in the database
+	//If not exists, throw a message
+	if (current.validate(strCurrentAccount))
 	{
+		if (current.addMoney(_wtof(strAmount)))
+		{
+			AfxMessageBox(L"Money added successfully!");
+		}
+
 		CDialogEx::OnOK();
 	}
+
 
 }

@@ -12,6 +12,8 @@ class AddMoneyDlg : public CDialogEx
 public:
 	AddMoneyDlg(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~AddMoneyDlg();
+	//Login account email
+	CString strEmail;
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -22,18 +24,21 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 	DECLARE_MESSAGE_MAP()
-public:
+private:
 	// Amount of money to add to the account
 	CString strAmount;
-	std::vector <CString> allAccounts;
 
-	void setAllAccounts(const std::vector <CString>& allAcc)
-	{
-		for (size_t i = 0; i < allAcc.size(); ++i)
-		{
-			allAccounts.push_back(allAcc[i]);
-		}
-	}
+	//All available bank accounts
+	std::vector <CString> allAccounts;
+	void setAllBankAccounts();
+
+
+	//Login Account Id
+	int nAccId;
+	void setLoginAccId();
+
+
+
 	//Initialize the Combo box
 	virtual BOOL OnInitDialog();
 	// All accounts for the user
@@ -45,7 +50,5 @@ public:
 
 	//database
 	Database database;
-
-	BOOL AddMoneyDlg::validation(const CString& strBankAcc);
 
 };

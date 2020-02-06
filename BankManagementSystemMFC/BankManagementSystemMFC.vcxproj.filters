@@ -60,7 +60,10 @@
     <ClInclude Include="SendMoneyDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ValidateBankAccount.h">
+    <ClInclude Include="BankAccount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Transaction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,10 +101,13 @@
     <ClCompile Include="SendMoneyDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Currencies.cpp">
+    <ClCompile Include="BankAccount.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ValidateBankAccount.cpp">
+    <ClCompile Include="Transaction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Currency.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

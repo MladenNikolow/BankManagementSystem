@@ -9,9 +9,9 @@ class Database
 public:
 
 	Database();
-	~Database();
+	virtual ~Database();
 	BOOL Execute(CString CmdStr);
-	//BOOL Database::select(const CString& selectQuery);
+
 	int selectInt(const CString& selectQuery, const CString& fieldName, const CString& whereStatement);
 	int selectCount(const CString& selectQuery);
 	double selectDouble(const CString& selectQuery, const CString& fieldName, const CString& whereStatement);

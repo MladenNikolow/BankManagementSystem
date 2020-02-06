@@ -29,42 +29,38 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-
 private:
+	virtual BOOL OnInitDialog();
 
 	// All bank accounts for the user
 	CComboBox comboBoxAccounts;
-	afx_msg void OnBnClickedButtonAddaccount();
 
 	//All bank accounts
 	std::vector<CString> allAccounts;
-	void setAllBankAccounts();
 
 	//Account id
 	int nAccId;
-	void setAccountId();
 
-
-
-
-
-	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedButtonAddmoney();
-	afx_msg void OnBnClickedButtonWithdraw();
-
-
-	afx_msg void OnBnClickedButtonHistory();
 	// History of the transactions for the bank account	// History of the transactions for the bank account
 	CString strTransHistory;
 
 	//Current bank account id
 	CString strBankAccName;
-	afx_msg void OnBnClickedButtonSend();
+
 	// The amount of money in the current bank account
 	CString strBalance;
 
 	Database database;
 
+	void setAccountId();
+	void updateComboBox();
 
+	afx_msg void OnBnClickedButtonAddmoney();
+	afx_msg void OnBnClickedButtonWithdraw();
+	afx_msg void OnBnClickedButtonSend();
+	afx_msg void OnBnClickedButtonHistory();
+	afx_msg void OnBnClickedButtonAddaccount();
+
+	void Banking::setAllBankAccounts();
 
 };

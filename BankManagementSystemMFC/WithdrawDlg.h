@@ -47,7 +47,5 @@ private:
 
 	//database
 	Database database;
-	//Validate the bank account
-	BOOL validation(const CString& strBankAcc);
 
 };

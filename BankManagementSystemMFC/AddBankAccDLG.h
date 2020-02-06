@@ -11,6 +11,8 @@ class AddBankAccDLG : public CDialogEx
 public:
 	AddBankAccDLG(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~AddBankAccDLG();
+	CString strEmailAcc;
+
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -22,6 +24,8 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 private:
+
+	virtual BOOL OnInitDialog();
 
 	// Currency of the new bank account
 	CString strCurrency;
@@ -38,11 +42,5 @@ private:
 	//The new bank account number
 	CString bankAccNumber;
 
-public:
-	CString strEmailAcc;
 
-	CString getBankAccNumber()const
-	{
-		return bankAccNumber;
-	}
 };

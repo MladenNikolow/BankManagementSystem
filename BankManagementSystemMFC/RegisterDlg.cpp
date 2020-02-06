@@ -295,6 +295,7 @@ void Register::createBankAccount()
 	bankAccNumber.Append(strCurrency); //add the currency
 	bankAccNumber.Append(genRandomBankNumber()); //generate the numbers
 
+	Database database;
 	//Create a bank account
 	CString sqlInsertQuery;
 	sqlInsertQuery.Format(

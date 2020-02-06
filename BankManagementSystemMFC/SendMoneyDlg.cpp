@@ -4,7 +4,8 @@
 #include "pch.h"
 #include "BankManagementSystemMFC.h"
 #include "SendMoneyDlg.h"
-#include "ValidateBankAccount.h"
+#include "Currency.h"
+#include "BankAccount.h"
 #include "afxdialogex.h"
 
 
@@ -37,13 +38,35 @@ BEGIN_MESSAGE_MAP(SendMoneyDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_SEND_MONEY, &SendMoneyDlg::OnBnClickedButtonSendMoney)
 END_MESSAGE_MAP()
 
+void SendMoneyDlg::setLoginAccId()
+{
+	//Get the current account id
+	CString selectQuery = L"SELECT id FROM LoginAccounts";
+	CString whereStatement;
+	whereStatement.Format(L"email = '%s'", strEmail);
 
-// SendMoneyDlg message handlers
+	nAccId = database.selectInt(selectQuery, L"id", whereStatement);
+}
 
+
+void SendMoneyDlg::setAllBankAccounts()
+{
+	//Get all bank accounts of this user
+	CString selectQuery;
+	selectQuery.Format(L"SELECT bank_acc_number FROM BankAccounts");
+	CString whereStatement;
+	whereStatement.Format(L"log_acc_id = '%d'", nAccId);
+
+	CString fieldName = _T("bank_acc_number");
+	allAccounts = database.selectMultipleStrings(selectQuery, fieldName, whereStatement);
+}
 
 BOOL SendMoneyDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+
+	setLoginAccId();
+	setAllBankAccounts();
 
 	for (size_t i = 0; i < allAccounts.size(); ++i)
 	{
@@ -55,34 +78,26 @@ BOOL SendMoneyDlg::OnInitDialog()
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
 
-BOOL SendMoneyDlg::validation(const CString& strBankAcc)
-{
-	CString strSqlSelect;
-	strSqlSelect.Format(L"SELECT bank_acc_number FROM BankAccounts");
-	CString strField = L"bank_acc_number";
-	CString strWhereStatement;
-	strWhereStatement.Format(L"bank_acc_number = '%s'", strBankAcc);
-
-	if (database.selectString(strSqlSelect, strField, strWhereStatement) == "No Data")
-	{
-		AfxMessageBox(L"Enter a valid bank account!");
-		return FALSE;
-	}
-
-	return TRUE;
-}
 
 void SendMoneyDlg::OnBnClickedButtonSendMoney()
 {
-	// TODO: Add your control notification handler code here
+
 	UpdateData(TRUE);
-	//get
+
+	//Get the current selection of the combo box
 	comboBoxAccounts.GetLBText(comboBoxAccounts.GetCurSel(), strCurrentBankAcc);
 
 	//Validate the bank accounts of the sender and the receiver
+	BankAccount sender (strCurrentBankAcc);
+	BankAccount receiver (strReceiverBankAcc);
 
-	if (validation(strReceiverBankAcc) && validation(strCurrentBankAcc))
+	if (sender.validate(strCurrentBankAcc) && receiver.validate(strReceiverBankAcc))
 	{
+		if (sender.sendMoney(strReceiverBankAcc, _wtof(strAmount)))
+		{
+			AfxMessageBox(L"Successful bank transfer");
+		}
+		
 		CDialogEx::OnOK();
 	}
 }

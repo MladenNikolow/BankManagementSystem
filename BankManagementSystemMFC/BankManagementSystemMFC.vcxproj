@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="AddBankAccDLG.h" />
     <ClInclude Include="AddMoneyDlg.h" />
+    <ClInclude Include="BankAccount.h" />
     <ClInclude Include="BankAccountNumberGenerator.h" />
     <ClInclude Include="BankingDlg.h" />
     <ClInclude Include="BankManagementSystemMFC.h" />
@@ -197,17 +198,18 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SendMoneyDlg.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="ValidateBankAccount.h" />
+    <ClInclude Include="Transaction.h" />
     <ClInclude Include="WithdrawDlg.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AddBankAccDLG.cpp" />
     <ClCompile Include="AddMoneyDlg.cpp" />
+    <ClCompile Include="BankAccount.cpp" />
     <ClCompile Include="BankAccountNumberGenerator.cpp" />
     <ClCompile Include="BankingDlg.cpp" />
     <ClCompile Include="BankManagementSystemMFC.cpp" />
     <ClCompile Include="BankManagementSystemMFCDlg.cpp" />
-    <ClCompile Include="Currencies.cpp" />
+    <ClCompile Include="Currency.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -217,7 +219,7 @@
     </ClCompile>
     <ClCompile Include="RegisterDlg.cpp" />
     <ClCompile Include="SendMoneyDlg.cpp" />
-    <ClCompile Include="ValidateBankAccount.cpp" />
+    <ClCompile Include="Transaction.cpp" />
     <ClCompile Include="WithdrawDlg.cpp" />
   </ItemGroup>
   <ItemGroup>

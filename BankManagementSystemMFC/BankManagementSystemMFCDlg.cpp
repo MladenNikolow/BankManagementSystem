@@ -9,6 +9,7 @@
 #include "afxdialogex.h"
 #include "RegisterDlg.h"
 #include "BankingDlg.h"
+#include "Database.h"
 #include "BankAccountNumberGenerator.h"
 
 #ifdef _DEBUG
@@ -59,6 +60,7 @@ CBankManagementSystemMFCDlg::CBankManagementSystemMFCDlg(CWnd* pParent /*=nullpt
 	, strPasswordLogin(_T("Password"))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
 
 	//If not exist table for the Login Accounts - create it
 	CString strCreateLoginTable = _T("");
