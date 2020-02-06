@@ -188,90 +188,48 @@ void CBankManagementSystemMFCDlg::OnBnClickedButtonRegister()
 {
 	// TODO: Add your control notification handler code here
 	Register regDlg;
-	regDlg.setDb(database);
-
 	INT_PTR result = regDlg.DoModal();
 
-	if (result == IDOK)
-	{
-		UpdateData(TRUE);
-
-		//Convert the age from string to int
-		int age = _wtoi(regDlg.strAge);
-		//Save Query
-		CString strSqlInsertQuery = _T("");
-		strSqlInsertQuery.Format(
-			 L" INSERT INTO LoginAccounts(first_name, second_name, last_name, age, email, phone, city, street_address, pass, last_login) VALUES ('%s', '%s', '%s', %i, '%s', '%s', '%s', '%s', '%s', GETDATE())", 
-			regDlg.strFirstName,
-			regDlg.strSecondName,
-			regDlg.strLastName,
-			age,
-			regDlg.strEmailReg,
-			regDlg.strPhone,
-			regDlg.strCity,
-			regDlg.strAddress,
-			regDlg.strPasswordReg
-		);
-		///Execute the query
-		database.Execute(strSqlInsertQuery);
-
-		//Get account id form Login table
-		CString selectQuery = _T("SELECT id FROM LoginAccounts");
-		CString whereStatement;
-		whereStatement.Format(L"email = '%s'", regDlg.strEmailReg);
-		CString fieldName = _T("id");
-		int log_acc_id = database.selectInt(selectQuery, fieldName, whereStatement);
-		//Generate a unique bank account number starting including the currency and 6 random numbers
-		CString bankAccNumber = regDlg.strCurrency; //add the currency
-		bankAccNumber += genRandomBankNumber(); //generate the numbers
-		//Save Query
-		strSqlInsertQuery.Format(
-			L"INSERT INTO BankAccounts(log_acc_id, bank_acc_number, currency, balance, date_of_creation) VALUES ('%i', '%s', '%s', '%d', GETDATE())",
-			log_acc_id,
-			bankAccNumber,
-			regDlg.strCurrency,
-			0.0
-		);
-		//Execute the query
-		database.Execute(strSqlInsertQuery);
-
-
-
-	}
 	
 }
 
-
-void CBankManagementSystemMFCDlg::OnBnClickedButtonLogin()
+BOOL CBankManagementSystemMFCDlg::checkPassword(const CString& strPass)
 {
-	// TODO: Add your control notification handler code here
-
-	Banking bankDlg;
-	UpdateData(TRUE);
-	
+	//Select password Where email = input email
 	CString selectQuery = L"SELECT pass FROM LoginAccounts";
 	CString whereStatement;
 	whereStatement.Format(L"email = '%s'", strEmailLogin);
-	CString realPassword = database.selectString(selectQuery, L"pass", whereStatement);
+	CString currentPassword = database.selectString(selectQuery, L"pass", whereStatement);
 
-	if (realPassword == strPasswordLogin)
+	if (strPass == currentPassword)
+	{
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+void CBankManagementSystemMFCDlg::OnBnClickedButtonLogin()
+{
+
+	UpdateData(TRUE);
+
+	Banking bankDlg;
+	bankDlg.strEmailAcc = strEmailLogin;
+
+	if (checkPassword(strPasswordLogin))
 	{ 
-		//Get the current account id
-		CString selectQuery = L"SELECT id FROM LoginAccounts";
-		CString whereStatement;
-		whereStatement.Format(L"email = '%s'", strEmailLogin);
-		int id = database.selectInt(selectQuery, L"id", whereStatement);
 
-		//set the email, id and the database for the BankDlg
-		bankDlg.setEmail(strEmailLogin);
-		bankDlg.setId(id);
-		bankDlg.setDb(database);
-		bankDlg.DoModal();
+
+		//set the email for the BankDlg
+		INT_PTR result = bankDlg.DoModal();
+
 	}
 	 else
 	{
 		AfxMessageBox(L"Wrong email or password!");
 	}
+
 
 
 }

@@ -32,7 +32,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-public:
+private:
 
 	afx_msg void OnBnClickedButtonRegister();
 	afx_msg void OnBnClickedButtonLogin();
@@ -49,4 +49,6 @@ public:
 	// Control the state of the password edit box (show/hide)
 	CEdit ctrPass;
 	afx_msg void OnBnClickedCheckPass();
+
+	BOOL checkPassword(const CString& strPass);
 };
