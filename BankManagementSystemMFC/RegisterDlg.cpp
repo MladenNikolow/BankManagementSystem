@@ -18,7 +18,7 @@ IMPLEMENT_DYNAMIC(Register, CDialogEx)
 
 Register::Register(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG_REGISTER, pParent)
-	, strFirstName(_T("Enter First Name"))
+	, strFirstName(_T(""))
 	, strSecondName(_T(""))
 	, strLastName(_T(""))
 	, strEmailReg(_T(""))
