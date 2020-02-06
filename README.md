@@ -13,7 +13,7 @@ A simple bank management system, developed in C++, using Microsoft SQL Server 20
   - Change the value of user variable to username, that have access to the DataBase . --> on line 13
   - Change the value of user variable to password for the user . --> on line 14
 
-Functionalities of the program:
+<b> Functionalities of the program: </b>
 
   - Create Bank Account in different currencies
   - Add money
@@ -22,7 +22,7 @@ Functionalities of the program:
   - See the history of the transactions
   - Currency exchange
   
-Photos:
+<b> Photos: </b>
 
 <img align="left" src="Photos/Registration.PNG">
 <img align="left" src="Photos/Login.PNG">
