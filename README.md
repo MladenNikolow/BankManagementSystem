@@ -21,8 +21,9 @@ Functionalities of the program:
   - Currency exchange
   
 Photos:
-<img src="Photos/Registration.PNG" width = 700 height = 700>
-<img src="Photos/Login.PNG" width = 500 height = 200>
+<img align="left" src="Photos/Registration.PNG">
+<img align="left" src="Photos/Login.PNG">
+<img align="left" src="Photos/Banking.PNG">
 ![Login dialog](Photos/Login.PNG)
 ![Banking dialog](Photos/Banking.PNG)
 
