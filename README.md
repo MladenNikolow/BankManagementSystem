@@ -3,7 +3,7 @@
 
 A simple bank management system, developed in C++, using Microsoft SQL Server 2017 Express and MFC (Visual C++).
 
-Connecting to SQL Server:
+<b> Connecting to SQL Server: </b>
 
   - Go to --> Database.cpp file
   - Change the Driver name --> on line 9 (or install ODBC Driver 17 for SQL Server)
