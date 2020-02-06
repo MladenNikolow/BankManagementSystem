@@ -21,4 +21,4 @@ Functionalities of the program:
   - Currency exchange
   
 Photos:
-![Registration dialog](/Photos/Registration.png)
+![Registration dialog](Photos/Registration.png)
