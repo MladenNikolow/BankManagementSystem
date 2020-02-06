@@ -24,7 +24,7 @@ A simple bank management system, developed in C++, using Microsoft SQL Server 20
   
 <b> Photos: </b>
 
-<img align="left" src="Photos/Registration.PNG">
+<img align="left" src="Photos/Registration.PNG" width = 714>
 <img align="left" src="Photos/Login.PNG">
 <img align="left" src="Photos/Banking.PNG">
 
