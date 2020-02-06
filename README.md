@@ -22,7 +22,7 @@ Functionalities of the program:
   
 Photos:
 <img src="Photos/Registration.PNG" width = 700 height = 700>
-![Registration dialog](Photos/Registration.PNG)
+<img src="Photos/RLogin.PNG" width = 500 height = 200>
 ![Login dialog](Photos/Login.PNG)
 ![Banking dialog](Photos/Banking.PNG)
 
