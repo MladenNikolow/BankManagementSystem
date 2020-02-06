@@ -1,5 +1,5 @@
-# BankManagementSystem
-<h1 align = "center"> C++ MFC </h1>
+<h1 align = "center"> BankManagementSystem </h1>
+<h2 align = "center"> C++ MFC </h2>
 
 A simple bank management system, developed in C++, using Microsoft SQL Server 2017 Express and MFC (Visual C++).
 
