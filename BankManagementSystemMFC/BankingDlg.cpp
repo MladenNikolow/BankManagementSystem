@@ -84,7 +84,6 @@ void Banking::updateComboBox()
 {
 
 	//Get all bank accounts of this user
-	allAccounts.clear();
 	setAllBankAccounts();
 
 	comboBoxAccounts.ResetContent();
@@ -117,7 +116,7 @@ void Banking::OnBnClickedButtonAddaccount()
 {
 	// TODO: Add your control notification handler code here
 	AddBankAccDLG addBankAccDlg;
-	addBankAccDlg.strEmailAcc = strEmailAcc;
+	addBankAccDlg.strEmail = strEmailAcc;
 
 	INT_PTR result = addBankAccDlg.DoModal();
 

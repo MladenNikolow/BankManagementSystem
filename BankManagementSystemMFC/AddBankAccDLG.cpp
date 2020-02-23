@@ -46,29 +46,27 @@ END_MESSAGE_MAP()
 
 
 // AddBankAccDLG message handlers
-
-void AddBankAccDLG::setLoginAccId()
+void AddBankAccDLG::setAccountId()
 {
-
 	//Get the current account id
 	CString selectQuery = L"SELECT id FROM LoginAccounts";
 	CString whereStatement;
-	whereStatement.Format(L"email = '%s'", strEmailAcc);
+	whereStatement.Format(L"email = '%s'", strEmail);
 
 	nAccId = database.selectInt(selectQuery, L"id", whereStatement);
-
 }
+
+
 
 BOOL AddBankAccDLG::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	setLoginAccId();
+	setAccountId();
 
-	return TRUE;  // return TRUE unless you set the focus to a control
-				  // EXCEPTION: OCX Property Pages should return FALSE
+		return TRUE;  // return TRUE unless you set the focus to a control
+					  // EXCEPTION: OCX Property Pages should return FALSE
 }
-
 
 void AddBankAccDLG::OnBnClickedButtonAddBankAcc()
 {
@@ -95,5 +93,6 @@ void AddBankAccDLG::OnBnClickedButtonAddBankAcc()
 		CDialogEx::OnOK();
 	}
 }
+
 
 

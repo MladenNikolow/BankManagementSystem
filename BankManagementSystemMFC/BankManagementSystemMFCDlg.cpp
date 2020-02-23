@@ -11,6 +11,7 @@
 #include "BankingDlg.h"
 #include "Database.h"
 #include "BankAccountNumberGenerator.h"
+#include <string>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -215,6 +216,9 @@ void CBankManagementSystemMFCDlg::OnBnClickedButtonLogin()
 {
 
 	UpdateData(TRUE);
+
+	CString* emailPtr = new CString;
+	(*emailPtr) = strEmailLogin;
 
 	Banking bankDlg;
 	bankDlg.strEmailAcc = strEmailLogin;

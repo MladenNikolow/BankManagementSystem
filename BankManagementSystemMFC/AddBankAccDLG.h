@@ -11,7 +11,9 @@ class AddBankAccDLG : public CDialogEx
 public:
 	AddBankAccDLG(CWnd* pParent = nullptr);   // standard constructor
 	virtual ~AddBankAccDLG();
-	CString strEmailAcc;
+	//Account email
+	CString strEmail;
+
 
 
 // Dialog Data
@@ -25,22 +27,26 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
 
-	virtual BOOL OnInitDialog();
-
 	// Currency of the new bank account
 	CString strCurrency;
+
 	// Initial amount of money for the new account
 	CString strAmount;
-	afx_msg void OnBnClickedButtonAddBankAcc();
 
 	Database database;
 
 	//Login Account Id
 	int nAccId;
-	void setLoginAccId();
 
 	//The new bank account number
 	CString bankAccNumber;
 
 
+	afx_msg void OnBnClickedButtonAddBankAcc();
+
+	void setAccountId();
+
+
+public:
+	virtual BOOL OnInitDialog();
 };
